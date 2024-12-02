@@ -98,7 +98,7 @@ safeIndexes.forEach((x) => {
 input2.forEach((line, j) => {
     const lineArray = line.split(" ").map((x) => parseInt(x));
     let bruteLines: string[] = [];
-    let safe = false;
+    let safe = true;
 
     lineArray.forEach((x) => {
         bruteLines.push(lineArray.filter((y) => y !== x).toString());
@@ -109,13 +109,15 @@ input2.forEach((line, j) => {
 
         // check for ascending or descending order
         if (
-            line.every((x, i) => {
+            !line.every((x, i) => {
                 return i === 0 || x >= line[i - 1];
-            }) ||
-            line.every((x, i) => {
+            }) &&
+            !line.every((x, i) => {
                 return i === 0 || x <= line[i - 1];
             })
         ) {
+            safe = false;
+        }
             // check for distance between numbers (1-3)
             for (let index = 0; index < line.length; index++) {
                 const num1 = line[index];
@@ -127,12 +129,11 @@ input2.forEach((line, j) => {
 
                 const distance = Math.abs(num2 - num1);
 
-                if (distance >= 1 && distance <= 3) {
-                    safe = true;
+                if (distance < 1 || distance > 3) {
+                    safe = false;
                     break;
                 }
             }
-        }
 
         // increment safe count
         if (safe) {
